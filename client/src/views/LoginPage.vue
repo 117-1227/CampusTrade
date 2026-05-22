@@ -27,8 +27,8 @@ async function handleLogin() {
     authStore.setToken(token)
     authStore.setUser(user)
     ElMessage.success('登录成功')
-    const redirect = (route.query.redirect as string) || '/'
-    router.push(redirect)
+    const redirect = route.query.redirect as string
+    router.push(redirect || (user.role === 'admin' ? '/admin' : '/'))
   } catch (err: unknown) {
     const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
     ElMessage.error(msg || '登录失败')

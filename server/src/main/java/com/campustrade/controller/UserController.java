@@ -27,7 +27,7 @@ public class UserController {
     public Result<User> me(@RequestHeader("Authorization") String auth) {
         Long userId = jwtTokenProvider.getUserIdFromToken(auth.replace("Bearer ", ""));
         User user = userMapper.selectById(userId);
-        return Result.success(user);
+        return Result.success(sanitize(user));
     }
 
     @PutMapping("/me")
@@ -41,7 +41,13 @@ public class UserController {
         if (updates.getAvatar() != null) user.setAvatar(updates.getAvatar());
         if (updates.getCampus() != null) user.setCampus(updates.getCampus());
         userMapper.updateById(user);
-        return Result.success(user, "更新成功");
+        return Result.success(sanitize(user), "更新成功");
+    }
+
+    /** 去除敏感字段：password / role / status */
+    private User sanitize(User u) {
+        u.setPassword(null);
+        return u;
     }
 
     @GetMapping("/{id}/profile")

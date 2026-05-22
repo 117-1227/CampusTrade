@@ -14,7 +14,12 @@ export const useAuthStore = defineStore('auth', () => {
 
   // 从 localStorage 恢复 user，避免刷新后丢失（admin 守卫依赖 isAdmin）
   const savedUser = localStorage.getItem('user')
-  const user = ref<UserInfo | null>(savedUser ? JSON.parse(savedUser) : null)
+  const user = ref<UserInfo | null>(parseSafe(savedUser))
+
+function parseSafe(raw: string | null): UserInfo | null {
+  if (!raw) return null
+  try { return JSON.parse(raw) } catch { return null }
+}
 
   function isLoggedIn(): boolean {
     return !!token.value

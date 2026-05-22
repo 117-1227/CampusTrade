@@ -25,3 +25,10 @@ mybatis-plus:
 logging:
   level:
     com.campustrade: DEBUG
+
+app:
+  jwt:
+    secret: dev-secret-h2-do-not-use-in-production
+    expiration: 86400000
+  upload:
+    path: ./uploads

@@ -1,20 +1,15 @@
-# ====== CampusTrade 默认开发环境（H2 内存数据库，零依赖启动） ======
-# 切换到 MySQL：./mvnw spring-boot:run -Dspring-boot.run.profiles=mysql
+# ====== CampusTrade 默认开发环境 ======
+# H2 免依赖启动: ./mvnw spring-boot:run -Dspring-boot.run.profiles=h2
 
 spring:
   profiles:
-    active: h2
+    active: mysql
   servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 50MB
 
-# 应用配置
+# CORS（所有 profile 共用）
 app:
-  jwt:
-    secret: campustrade-jwt-secret-key-change-in-production
-    expiration: 86400000   # 24小时 (ms)
-  upload:
-    path: ./uploads        # 图片上传目录（相对于项目根目录）
   cors:
     allowed-origins: http://localhost:5173,http://127.0.0.1:5173

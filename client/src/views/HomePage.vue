@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { getProducts, type ProductItem } from '@/api/product'
 import { getCategories, type CategoryNode } from '@/api/category'
 import { Search } from '@element-plus/icons-vue'
 
 const router = useRouter()
+const route = useRoute()
 const products = ref<ProductItem[]>([])
 const categories = ref<CategoryNode[]>([])
 const keyword = ref('')
@@ -38,6 +39,9 @@ onMounted(async () => {
     const res = await getCategories()
     categories.value = res.data.data || []
   } catch { /* categories are optional */ }
+  // 从 URL query 读取外部搜索（如 AppHeader 跳转）
+  const kw = route.query.keyword as string
+  if (kw) keyword.value = kw
   loadProducts()
 })
 
@@ -60,16 +64,8 @@ const conditionLabels: Record<string, string> = {
     <div class="hero">
       <h1>CampusTrade 校园二手交易平台</h1>
       <div class="search-bar">
-        <el-input
-          v-model="keyword"
-          placeholder="搜索商品..."
-          size="large"
-          :prefix-icon="Search"
-          clearable
-          @keyup.enter="onSearch"
-          @clear="onSearch"
-          style="width: 400px"
-        />
+        <el-input v-model="keyword" placeholder="搜索商品..." size="large" :prefix-icon="Search" clearable
+          @keyup.enter="onSearch" @clear="onSearch" style="width: 400px" />
         <el-button type="primary" size="large" :icon="Search" @click="onSearch">搜索</el-button>
       </div>
     </div>
