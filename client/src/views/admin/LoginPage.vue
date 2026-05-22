@@ -22,11 +22,11 @@ async function handleLogin() {
   loading.value = true
   try {
     const res = await adminLogin(form)
-    const { token, user } = res.data.data
-    if (user.role !== 'admin') {
-      ElMessage.error('无管理员权限')
+    if (res.data.code !== 200 || !res.data.data) {
+      ElMessage.error(res.data.message || '无管理员权限')
       return
     }
+    const { token, user } = res.data.data
     authStore.setToken(token)
     authStore.setUser(user)
     ElMessage.success('管理员登录成功')
