@@ -17,13 +17,52 @@ const router = createRouter({
       component: () => import('@/views/RegisterPage.vue'),
     },
     {
+      path: '/product/:id',
+      component: () => import('@/views/ProductDetailPage.vue'),
+    },
+    {
+      path: '/publish',
+      component: () => import('@/views/PublishPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/profile',
+      component: () => import('@/views/ProfilePage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/user/:id',
+      component: () => import('@/views/SellerPage.vue'),
+    },
+    {
+      path: '/chat',
+      component: () => import('@/views/ChatPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/chat/:id',
+      component: () => import('@/views/ChatPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/orders',
+      component: () => import('@/views/OrdersPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/admin/login',
       component: () => import('@/views/admin/LoginPage.vue'),
     },
     {
       path: '/admin',
-      component: () => import('@/views/admin/DashboardPage.vue'),
+      component: () => import('@/views/admin/AdminLayout.vue'),
       meta: { requiresAuth: true, requiresAdmin: true },
+      children: [
+        { path: '', component: () => import('@/views/admin/DashboardPage.vue') },
+        { path: 'audit', component: () => import('@/views/admin/AuditPage.vue') },
+        { path: 'users', component: () => import('@/views/admin/UsersPage.vue') },
+        { path: 'categories', component: () => import('@/views/admin/CategoriesPage.vue') },
+      ],
     },
     {
       path: '/:pathMatch(.*)*',

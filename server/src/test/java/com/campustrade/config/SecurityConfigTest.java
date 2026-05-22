@@ -128,4 +128,19 @@ class SecurityConfigTest {
         assert !body.contains("\"role\"") : "seller response MUST NOT contain role";
         assert !body.contains("\"status\"") : "seller response MUST NOT contain status";
     }
+
+    @Test
+    void shouldBlockAnonymousFromOrders() throws Exception {
+        mockMvc.perform(get("/api/orders/buy"))
+            .andExpect(status().isForbidden());
+        mockMvc.perform(post("/api/orders"))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldAllowAuthenticatedToAccessOwnOrders() throws Exception {
+        mockMvc.perform(get("/api/orders/buy")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + userToken))
+            .andExpect(status().isOk());
+    }
 }

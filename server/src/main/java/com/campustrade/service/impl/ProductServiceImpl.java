@@ -113,7 +113,15 @@ public class ProductServiceImpl implements ProductService {
         LambdaQueryWrapper<Product> q = new LambdaQueryWrapper<Product>()
             .eq(Product::getStatus, "active")
             .eq(Product::getAuditStatus, "approved");
-        if (categoryId != null) q.eq(Product::getCategoryId, categoryId);
+        if (categoryId != null) {
+            List<Long> ids = new java.util.ArrayList<>();
+            ids.add(categoryId);
+            categoryMapper.selectList(
+                new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<Category>()
+                    .eq(Category::getParentId, categoryId))
+                .forEach(c -> ids.add(c.getId()));
+            q.in(Product::getCategoryId, ids);
+        }
         if (keyword != null && !keyword.isBlank()) {
             q.and(w -> w.like(Product::getTitle, keyword).or().like(Product::getDescription, keyword));
         }
