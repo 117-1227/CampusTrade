@@ -1,6 +1,5 @@
-# ====== CampusTrade 开发环境配置 ======
-# 默认使用 H2 内存数据库，零外部依赖即可启动
-# 切换到 MySQL：修改 spring.profiles.active=mysql
+# ====== CampusTrade 默认开发环境（H2 内存数据库，零依赖启动） ======
+# 切换到 MySQL：./mvnw spring-boot:run -Dspring-boot.run.profiles=mysql
 
 spring:
   profiles:
@@ -17,3 +16,5 @@ app:
     expiration: 86400000   # 24小时 (ms)
   upload:
     path: ./uploads        # 图片上传目录（相对于项目根目录）
+  cors:
+    allowed-origins: http://localhost:5173,http://127.0.0.1:5173

@@ -64,7 +64,7 @@
 - 不要引入新的大型依赖（不换框架、不换 ORM、不换 UI 库）
 - 不要做 PRD 之外的功能
 - 不要跳过编译/类型检查
-- 不要在前端直接操作 localStorage 存敏感信息（token 存 cookie 或在 Pinia 中管理）
+- 不要在前端 localStorage 存敏感信息（token 存 localStorage 是 MVP 可接受方案，须配合 XSS 防护；V2 迁移到 httpOnly cookie 更安全）
 - 不要用字符串拼接 SQL（MyBatis-Plus 的 QueryWrapper 已经安全）
 
 ## 不确定时

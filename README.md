@@ -70,26 +70,28 @@ npm run dev                     # http://localhost:5173
 CampusTrade/
 ├── client/                  # Vue 3 前端
 │   ├── src/
-│   │   ├── api/             # Axios 封装 + 接口函数
-│   │   ├── components/      # 通用组件
-│   │   ├── views/           # 页面视图
-│   │   ├── router/          # Vue Router 路由
-│   │   ├── stores/          # Pinia 状态管理
-│   │   ├── utils/           # 工具函数
-│   │   └── types/           # TypeScript 类型定义
+│   │   ├── api/index.ts     # ✅ Axios 封装 + JWT 拦截器
+│   │   ├── components/      # (Phase 2+)
+│   │   ├── views/           # ✅ 占位页面 (Home/Login/404/Admin)
+│   │   ├── router/index.ts  # ✅ Vue Router + beforeEach 守卫
+│   │   ├── stores/          # ✅ Pinia authStore (user/admin 统一)
+│   │   ├── utils/           # (Phase 2+)
+│   │   └── types/index.ts   # ✅ 共享类型
 │   └── ...
 ├── server/                  # Spring Boot 后端
 │   └── src/main/java/com/campustrade/
-│       ├── controller/      # REST 控制器
-│       ├── service/         # 业务逻辑层
-│       │   └── impl/        # 实现类
-│       ├── mapper/          # MyBatis-Plus Mapper
-│       ├── entity/          # 数据库实体
-│       ├── dto/             # 数据传输对象（入参）
-│       ├── vo/              # 视图对象（出参）
-│       ├── config/          # Spring 配置（Security、CORS、WebSocket）
-│       ├── common/          # 统一返回、异常处理
-│       └── utils/           # 工具类（JWT、文件上传）
+│       ├── controller/      # ✅ HelloController (联调验证)
+│       │   └── admin/       # (Phase 3)
+│       ├── service/         # (Phase 1+)
+│       │   └── impl/        # (Phase 1+)
+│       ├── mapper/          # (Phase 1+)
+│       ├── entity/          # (Phase 1+)
+│       ├── dto/             # (Phase 1+)
+│       ├── vo/              # (Phase 1+)
+│       ├── config/          # ✅ SecurityConfig / CorsConfig
+│       ├── security/        # (Phase 1: JWT filter)
+│       ├── common/          # ✅ Result / BusinessException / GlobalExceptionHandler
+│       └── utils/           # (Phase 2+)
 ├── docs/
 │   ├── analysis/            # 需求分析文档
 │   │   ├── 01-需求分析.md

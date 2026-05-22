@@ -11,7 +11,10 @@ interface UserInfo {
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(localStorage.getItem('token'))
-  const user = ref<UserInfo | null>(null)
+
+  // 从 localStorage 恢复 user，避免刷新后丢失（admin 守卫依赖 isAdmin）
+  const savedUser = localStorage.getItem('user')
+  const user = ref<UserInfo | null>(savedUser ? JSON.parse(savedUser) : null)
 
   function isLoggedIn(): boolean {
     return !!token.value
@@ -28,12 +31,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   function setUser(newUser: UserInfo) {
     user.value = newUser
+    localStorage.setItem('user', JSON.stringify(newUser))
   }
 
   function logout() {
     token.value = null
     user.value = null
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
   }
 
   return { token, user, isLoggedIn, isAdmin, setToken, setUser, logout }

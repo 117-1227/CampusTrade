@@ -29,7 +29,68 @@ INSERT INTO category (id, name, icon, parent_id, sort_order) VALUES
 (5, '运动户外', 'Basketball', NULL, 5),
 (6, '其他', 'More', NULL, 6);
 
--- 测试管理员: admin / admin123
-INSERT INTO `user` (username, password, nickname, phone, campus, role, status)
-VALUES ('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi',
-        '系统管理员', '13800000000', 'XX大学', 'admin', 'active');
+-- 管理员账号由 DataInitializer 启动时自动创建
+
+CREATE TABLE IF NOT EXISTS product (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    original_price DECIMAL(10,2),
+    `condition` VARCHAR(20) NOT NULL,
+    images TEXT NOT NULL DEFAULT '[]',
+    category_id BIGINT NOT NULL,
+    seller_id BIGINT NOT NULL,
+    status VARCHAR(20) DEFAULT 'active',
+    audit_status VARCHAR(20) DEFAULT 'pending',
+    audit_reason VARCHAR(500),
+    view_count INT DEFAULT 0,
+    fav_count INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS favorite (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE INDEX uk_user_product (user_id, product_id)
+);
+
+CREATE TABLE IF NOT EXISTS conversation (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    buyer_id BIGINT NOT NULL,
+    seller_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    last_message TEXT,
+    last_message_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE INDEX uk_buyer_seller_product (buyer_id, seller_id, product_id)
+);
+
+CREATE TABLE IF NOT EXISTS message (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    conversation_id BIGINT NOT NULL,
+    sender_id BIGINT NOT NULL,
+    content TEXT NOT NULL,
+    is_read TINYINT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS `order` (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT NOT NULL,
+    buyer_id BIGINT NOT NULL,
+    seller_id BIGINT NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    pending_product_id BIGINT AS (
+        CASE WHEN status = 'pending' THEN product_id END
+    ),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE INDEX uk_pending (pending_product_id),
+    INDEX idx_buyer (buyer_id),
+    INDEX idx_seller (seller_id)
+);
