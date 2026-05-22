@@ -1,0 +1,19 @@
+# ====== CampusTrade 开发环境配置 ======
+# 默认使用 H2 内存数据库，零外部依赖即可启动
+# 切换到 MySQL：修改 spring.profiles.active=mysql
+
+spring:
+  profiles:
+    active: h2
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 50MB
+
+# 应用配置
+app:
+  jwt:
+    secret: campustrade-jwt-secret-key-change-in-production
+    expiration: 86400000   # 24小时 (ms)
+  upload:
+    path: ./uploads        # 图片上传目录（相对于项目根目录）
